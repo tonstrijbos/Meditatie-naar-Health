@@ -1,0 +1,35 @@
+name: Bouw APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Project ophalen
+        uses: actions/checkout@v4
+
+      - name: Java installeren
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Gradle installeren
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.7'
+
+      - name: APK bouwen
+        run: gradle assembleDebug
+
+      - name: APK bewaren
+        uses: actions/upload-artifact@v4
+        with:
+          name: MeditatieHealth-APK
+          path: app/build/outputs/apk/debug/app-debug.apk
